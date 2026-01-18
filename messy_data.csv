@@ -1,0 +1,8 @@
+﻿id,   first_name, LAST_name, email, age
+1,  jOhn  , DOE, john.doe@email.com, 28
+2, JANE, smith,   jane.smith@email.com, 34
+
+3, michael, Jordan, mike@email.com,   60
+4,   ,   ,   ,  
+
+5,   sara, CONNOR, sara.c@email.com, 29
