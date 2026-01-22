@@ -24,7 +24,6 @@ def clean_data(raw_data):
     cleaned = []
     
     for row in raw_data:
-        # 1. Skip rows where every single column is blank or just spaces
         if all(value.strip() == '' for value in row.values() if value is not None):
             continue
             
@@ -32,11 +31,10 @@ def clean_data(raw_data):
         for key, value in row.items():
             clean_val = value.strip() if value else ""
             
-            # 2. Format specific columns properly
             if key in ['first_name', 'LAST_name']:
-                clean_val = clean_val.title() # e.g., jOhn -> John, smith -> Smith
+                clean_val = clean_val.title()
             elif key == 'email':
-                clean_val = clean_val.lower() # e.g., MIKE@email.com -> mike@email.com
+                clean_val = clean_val.lower()
                 
             cleaned_row[key.lower()] = clean_val
             
@@ -44,17 +42,28 @@ def clean_data(raw_data):
         
     return cleaned
 
+def write_csv(data, output_path):
+    """Writes the cleaned data list of dictionaries to a new CSV file."""
+    if not data:
+        print("No data to write!")
+        return
+
+    # Extract headers from the keys of the first dictionary
+    headers = data[0].keys()
+    print(f"Writing clean data to {output_path}...")
+
+    with open(output_path, mode='w', encoding='utf-8', newline='') as file:
+        writer = csv.DictWriter(file, fieldnames=headers)
+        writer.writeheader()
+        writer.writerows(data)
+        
+    print("Export complete!")
+
 if __name__ == "__main__":
     input_file = "messy_data.csv"
+    output_file = "cleaned_data.csv"
     
-    # Step 1: Read the data
-    data = read_csv(input_file)
-    
-    # Step 2: Clean the data
-    clean_dataset = clean_data(data)
-    
-    print("\n--- BEFORE (Sample Messy Row) ---")
-    print(data[1])
-    
-    print("\n--- AFTER (Sample Cleaned Row) ---")
-    print(clean_dataset[1])
+    # 1. Pipeline execution
+    raw_dataset = read_csv(input_file)
+    clean_dataset = clean_data(raw_dataset)
+    write_csv(clean_dataset, output_file)
